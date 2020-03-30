@@ -2191,7 +2191,7 @@ public class RestClient implements ClientHttpRequestInterceptor, Closeable {
 
     public List<EntitySubtype> getEdgeTypes() {
         return restTemplate.exchange(
-                baseURL + "/api/edges",
+                baseURL + "/api/edge/types",
                 HttpMethod.GET,
                 HttpEntity.EMPTY,
                 new ParameterizedTypeReference<List<EntitySubtype>>() {
