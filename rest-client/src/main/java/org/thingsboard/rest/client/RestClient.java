@@ -2137,6 +2137,18 @@ public class RestClient implements ClientHttpRequestInterceptor, Closeable {
         }
     }
 
+    public TextPageData<Device> getEdgeDevices(EdgeId edgeId, String deviceType, TextPageLink pageLink) {
+        Map<String, String> params = new HashMap<>();
+        params.put("edgeId", edgeId.getId().toString());
+        params.put("type", deviceType);
+        addPageLinkToParam(params, pageLink);
+        return restTemplate.exchange(
+                baseURL + "/api/edge/{edgeId}/devices?type={type}&" + getUrlParams(pageLink),
+                HttpMethod.GET, HttpEntity.EMPTY,
+                new ParameterizedTypeReference<TextPageData<Device>>() {
+                }, params).getBody();
+    }
+
     public TextPageData<Edge> getTenantEdges(String type, TextPageLink pageLink) {
         Map<String, String> params = new HashMap<>();
         params.put("type", type);
