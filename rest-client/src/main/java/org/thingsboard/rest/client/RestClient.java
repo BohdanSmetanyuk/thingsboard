@@ -2149,6 +2149,44 @@ public class RestClient implements ClientHttpRequestInterceptor, Closeable {
                 }, params).getBody();
     }
 
+    public Optional<Asset> assignAssetToEdge(EdgeId edgeId, AssetId assetId) {
+        try {
+            ResponseEntity<Asset> asset = restTemplate.postForEntity(baseURL + "/api/edge/{edgeId}/asset/{assetId}", null, Asset.class, edgeId.getId(), assetId.getId());
+            return Optional.ofNullable(asset.getBody());
+        } catch (HttpClientErrorException exception) {
+            if (exception.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return Optional.empty();
+            } else {
+                throw exception;
+            }
+        }
+    }
+
+    public Optional<Asset> unassignAssetFromEdge(AssetId assetId) {
+        try {
+            ResponseEntity<Asset> asset = restTemplate.exchange(baseURL + "/api/edge/asset/{assetId}", HttpMethod.DELETE, HttpEntity.EMPTY, Asset.class, assetId.getId());
+            return Optional.ofNullable(asset.getBody());
+        } catch (HttpClientErrorException exception) {
+            if (exception.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return Optional.empty();
+            } else {
+                throw exception;
+            }
+        }
+    }
+
+    public TextPageData<Asset> getEdgeAssets(EdgeId edgeId, String assetType, TextPageLink pageLink) {
+        Map<String, String> params = new HashMap<>();
+        params.put("edgeId", edgeId.getId().toString());
+        params.put("type", assetType);
+        addPageLinkToParam(params, pageLink);
+        return restTemplate.exchange(
+                baseURL + "/api/edge/{edgeId}/assets?type={type}&" + getUrlParams(pageLink),
+                HttpMethod.GET, HttpEntity.EMPTY,
+                new ParameterizedTypeReference<TextPageData<Asset>>() {
+                }, params).getBody();
+    }
+
     public TextPageData<Edge> getTenantEdges(String type, TextPageLink pageLink) {
         Map<String, String> params = new HashMap<>();
         params.put("type", type);
