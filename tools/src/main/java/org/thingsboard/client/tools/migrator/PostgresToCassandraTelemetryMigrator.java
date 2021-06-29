@@ -97,7 +97,7 @@ public class PostgresToCassandraTelemetryMigrator {
                 try {
                     List<String> raw = Arrays.stream(line.trim().split("\t"))
                             .map(String::trim)
-                            .filter(StringUtils::isNotEmpty)
+                            //.filter(StringUtils::isNotEmpty)
                             .collect(Collectors.toList());
                     List<Object> values = toValues(raw);
 
