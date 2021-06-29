@@ -50,7 +50,7 @@ public class PgCaLatestMigrator {
         long stepLineTs = System.currentTimeMillis();
         long stepOkLineTs = System.currentTimeMillis();
         LineIterator iterator = FileUtils.lineIterator(sourceFile);
-        currentTsWriter = WriterBuilder.getTsWriter(outDir);
+        currentTsWriter = WriterBuilder.getLatestWriter(outDir);
 
         boolean isBlockStarted = false;
         boolean isBlockFinished = false;
@@ -86,7 +86,7 @@ public class PgCaLatestMigrator {
                 try {
                     List<String> raw = Arrays.stream(line.trim().split("\t"))
                             .map(String::trim)
-                            .filter(StringUtils::isNotEmpty)
+                            //.filter(StringUtils::isNotEmpty)
                             .collect(Collectors.toList());
                     List<Object> values = toValues(raw);
 
